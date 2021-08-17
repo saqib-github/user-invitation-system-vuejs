@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <app-bar v-if="token"></app-bar>
+    <app-bar v-if="getToken"></app-bar>
 
     <v-main>
       <router-view />
@@ -20,8 +20,13 @@ export default {
 
   data: () => ({
     //
-    token: store.getters.getToken,
   }),
   created: () => console.log(" token ", store.getters.getToken),
+
+  computed: {
+    getToken() {
+      return store.getters.getToken;
+    },
+  },
 };
 </script>

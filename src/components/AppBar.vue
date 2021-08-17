@@ -8,42 +8,12 @@
       :style="{ top: $vuetify.application.top + 'px', zIndex: 6 }"
     >
       <v-list dense>
-        <v-list-item
-          ><v-btn text to="/managecomputers">
-            <v-icon medium class="pr-2">{{ mdiDesktopClassic }}</v-icon
-            >Manage Computers</v-btn
-          >
-        </v-list-item>
         <v-list-item>
-          <v-btn text to="/">
+          <v-btn text to="/inviteuser">
             <v-icon medium class="pr-2">{{
               mdiAccountSupervisorOutline
             }}</v-icon
-            >Manage users</v-btn
-          >
-        </v-list-item>
-        <v-list-item>
-          <v-btn text to="/accountsettings"
-            ><v-icon medium class="pr-2">{{ mdiAccountOutline }}</v-icon
-            >Account Settings</v-btn
-          >
-        </v-list-item>
-        <v-list-item
-          ><v-btn text to="/subscriptions"
-            ><v-icon medium class="pr-2">{{ mdiKeyOutline }}</v-icon>
-            Subscriptions</v-btn
-          >
-        </v-list-item>
-        <v-list-item
-          ><v-btn text to="/invoices"
-            ><v-icon medium class="pr-2">{{ mdiReceipt }}</v-icon>
-            Invoices</v-btn
-          >
-        </v-list-item>
-        <v-list-item>
-          <v-btn text to="/paymentmethods"
-            ><v-icon medium class="pr-2">{{ mdiKeyOutline }}</v-icon> Payment
-            Methods</v-btn
+            >Invite users</v-btn
           >
         </v-list-item>
       </v-list>
@@ -53,13 +23,13 @@
         ><v-icon v-if="drawer">{{ mdiArrowLeft }}</v-icon></v-app-bar-nav-icon
       >
       <v-toolbar-title class="black--text">
-        <span class="text-h6"> Apple Tech</span>
+        <span class="text-h6"> User Invitation System </span>
         <v-btn icon>
           <v-icon color="black">{{ mdiChevronDown }}</v-icon></v-btn
         ></v-toolbar-title
       >
       <v-spacer></v-spacer>
-      <v-menu bottom min-width="200px" square- offset-y>
+      <v-menu bottom min-width="250px" square- offset-y>
         <template v-slot:activator="{ on }">
           <v-btn icon x-large v-on="on" class="ml-2">
             <v-avatar color="#EA8E6F" class="rounded-lg" size="40">
@@ -90,7 +60,7 @@
                 </v-btn>
               </div>
               <div>
-                <v-btn depressed rounded text
+                <v-btn depressed rounded text @click="signOut"
                   ><v-icon>{{ mdiLogout }}</v-icon> Sign out
                 </v-btn>
               </div>
@@ -137,5 +107,11 @@ export default {
       email: "john.doe@doe.com",
     },
   }),
+  methods: {
+    signOut() {
+      this.$store.dispatch("setToken", false);
+      this.$router.push("/");
+    },
+  },
 };
 </script>
