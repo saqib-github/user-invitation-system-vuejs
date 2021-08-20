@@ -73,6 +73,7 @@
         </v-card>
       </v-menu>
     </v-app-bar>
+    {{ getUser }}
   </div>
 </template>
 
@@ -87,6 +88,8 @@ import { mdiArrowLeft } from "@mdi/js";
 import { mdiHelpBox } from "@mdi/js";
 import { mdiMessageAlertOutline } from "@mdi/js";
 import { mdiLogout } from "@mdi/js";
+import Helpers from "../helpers/Helper.js";
+// import axios from "axios"
 export default {
   name: "app-bar",
   data: () => ({
@@ -109,9 +112,30 @@ export default {
   }),
   methods: {
     signOut() {
-      this.$store.dispatch("setToken", false);
-      this.$router.push("/");
+      this.$localStorage.remove("token");
+      this.$router.push("/login");
+      window.location.reload();
     },
+      getUser() {
+      let url = "http://localhost:3000/api/user";
+      const headers = {
+        Authorization: `Bearer ${this.$localStorage.get("token")}`,
+      };
+      console.log("headers", headers);
+      let user = [];
+
+      Helpers.get(url, { headers: headers }).then((response) => {
+        user.push(response.data);
+        console.log("response", response);
+      }).catch((error) => {
+        console.log("error", error);
+      });
+
+      return user;
+    },
+  },
+  computed: {
+  
   },
 };
 </script>

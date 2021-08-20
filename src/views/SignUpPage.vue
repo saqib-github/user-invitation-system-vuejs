@@ -1,22 +1,58 @@
 <template>
   <v-container fill-height fluid class="justify-center red darken-1">
-    <v-card height="450" width="600">
+    <v-card height="500" width="600">
       <v-container fill-height fluid>
         <v-layout row wrap justify-center align-center>
           <v-flex xs12 md10>
             <h1 class="text-center blue--text">Sign up</h1>
             <div class="mt-3">
-              <v-text-field outlined dense label="First Name"></v-text-field>
-              <v-text-field outlined dense label="Last Name"></v-text-field>
-              <v-text-field dense label="Email" outlined> </v-text-field>
-              <v-text-field dense label="Password" outlined> </v-text-field>
-              <v-row>
-                <v-btn color="primary" class="mr-4 ml-3" to="/">Login</v-btn>
-                <v-btn color="primary" class="mr-4 ml-3">Sign up</v-btn>
-                <!-- <v-btn color="primary" class="mr-4 ml-3"
+              <v-form>
+                <v-text-field
+                  outlined
+                  dense
+                  label="Enter your first name"
+                  v-model.trim="first_name"
+                ></v-text-field>
+                <v-text-field
+                  outlined
+                  dense
+                  label="Enter your last name"
+                  v-model.trim="last_name"
+                ></v-text-field>
+                <v-text-field
+                  dense
+                  label="Enter your email"
+                  outlined
+                  v-model.trim="email"
+                >
+                </v-text-field>
+                <v-text-field
+                  dense
+                  label="Enter your address"
+                  outlined
+                  v-model.trim="address"
+                >
+                </v-text-field>
+                <v-text-field
+                  dense
+                  label="Password"
+                  outlined
+                  v-model.trim="password"
+                >
+                </v-text-field>
+                <v-row>
+                  <v-btn color="primary" class="mr-4 ml-3" to="/">Login</v-btn>
+                  <v-btn
+                    color="primary"
+                    class="mr-4 ml-3"
+                    @click.prevent="signup"
+                    >Sign up</v-btn
+                  >
+                  <!-- <v-btn color="primary" class="mr-4 ml-3"
                   ><v-icon>{{ mdiGmail }}</v-icon> google</v-btn
                 > -->
-              </v-row>
+                </v-row>
+              </v-form>
             </div>
           </v-flex>
         </v-layout>
@@ -26,16 +62,76 @@
 </template>
 
 <script>
+import Swal from "sweetalert2";
 import { mdiGmail } from "@mdi/js";
+import Helpers from "../helpers/Helper.js";
+import qs from "qs";
 export default {
   name: "SignUpPage",
   data() {
     return {
       mdiGmail: mdiGmail,
+      // ....... v-models for signup user values
+      first_name: "",
+      last_name: "",
+      email: "",
+      address: "",
+      password: "",
     };
   },
 
-  components: {},
+  methods: {
+    signup() {
+      if (
+        !this.first_name ||
+        !this.last_name ||
+        !this.email ||
+        !this.address ||
+        !this.password
+      ) {
+        Swal.fire("Opps", "Please enter all values", "error");
+      }
+      if (
+        this.first_name &&
+        this.last_name &&
+        this.email &&
+        this.address &&
+        this.password
+      ) {
+        const url = "http://localhost:3000/api/auth/signup";
+        const user = qs.stringify({
+          first_name: this.first_name,
+          last_name: this.last_name,
+          email: this.email,
+          address: this.address,
+          password: this.password,
+        });
+        Helpers.post(url, user)
+          .then((response) => {
+            if (response.status == 200) {
+              Swal.fire(
+                "Account Created",
+                "Conragulation! Your account has been created successfully",
+                "success"
+              );
+              this.$router.push("/login");
+            }
+            if (response.status == 203) {
+              Swal.fire("Opps Sorry", response.data.message, "error");
+            }
+            console.log("Response", response);
+          })
+          .catch((error) => {
+            console.log("Error", error);
+          });
+        console.log("first_name: ", this.first_name);
+        console.log("last_name: ", this.last_name);
+        console.log("email: ", this.email);
+        console.log("address: ", this.address);
+        console.log("password: ", this.password);
+      }
+    },
+  },
 };
 </script>
 <style></style>

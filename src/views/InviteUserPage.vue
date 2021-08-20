@@ -16,9 +16,14 @@
                 <v-flex xs12 md10>
                   <v-text-field
                     outlined
-                    label="enter email of your friend"
+                    label="Enter email of your friend"
                   ></v-text-field>
-                  <v-btn color="primary">Send Invite</v-btn>
+                  <v-btn
+                    color="primary"
+                    v-model.trim="send_invite_email"
+                    @click="sendInvite"
+                    >Send Invite</v-btn
+                  >
                   <v-btn @click="dialog = false" color="primary" small text
                     >close</v-btn
                   >
@@ -34,12 +39,26 @@
 </template>
 
 <script>
+import Swal from "sweetalert2";
+// import Helpers from "../helpers/Helper.js";
 export default {
   name: "InviteUserPage",
   data() {
     return {
       dialog: false,
+      send_invite_email: "",
     };
+  },
+  methods: {
+    sendInvite() {
+      if (!this.send_invite_email) {
+        Swal.fire(
+          "Opps",
+          "Please enter your email address where you want to send invite",
+          "error"
+        );
+      }
+    },
   },
 };
 </script>
