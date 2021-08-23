@@ -16,14 +16,10 @@
                 <v-flex xs12 md10>
                   <v-text-field
                     outlined
+                    v-model.trim="send_invite_email"
                     label="Enter email of your friend"
                   ></v-text-field>
-                  <v-btn
-                    color="primary"
-                    v-model.trim="send_invite_email"
-                    @click="sendInvite"
-                    >Send Invite</v-btn
-                  >
+                  <v-btn color="primary" @click="sendInvite">Send Invite</v-btn>
                   <v-btn @click="dialog = false" color="primary" small text
                     >close</v-btn
                   >
@@ -41,6 +37,7 @@
 <script>
 import Swal from "sweetalert2";
 // import Helpers from "../helpers/Helper.js";
+import axios from "axios";
 export default {
   name: "InviteUserPage",
   data() {
@@ -57,6 +54,19 @@ export default {
           "Please enter your email address where you want to send invite",
           "error"
         );
+      }
+      if (this.send_invite_email) {
+        let url = "http://localhost:3000/api/user/sendmail";
+        const headers = {
+          "x-access-token": `${this.$localStorage.get("token")}`,
+          "content-type": "application/json",
+        };
+        axios
+          .post(url, { headers: headers }, { email: this.send_invite_email })
+          .then((response) => {
+            console.log(response);
+          })
+          .catch((error) => console.log("error", error));
       }
     },
   },

@@ -1,16 +1,9 @@
 <template>
   <div>
-    <div v-if="getToken">
+    <div>
       <v-app>
-        <app-bar></app-bar>
+        <app-bar v-show="token"></app-bar>
 
-        <v-main>
-          <router-view />
-        </v-main>
-      </v-app>
-    </div>
-    <div v-if="!getToken">
-      <v-app>
         <v-main>
           <router-view />
         </v-main>
@@ -28,29 +21,25 @@ export default {
     AppBar: AppBar,
   },
 
-  data: () => ({
+  data() {
     //
-  }),
-  computed: {
-    getToken() {
-      if (this.$localStorage.get("token")) {
-        return true;
-      } else {
-        return false;
-      }
-    },
+    return {
+      token: {
+        type: Boolean,
+        default: false,
+      },
+    };
   },
-  watch: {
-    getToken() {
-      if (this.$localStorage.get("token")) {
-        this.getToken = true;
-      } else {
-        this.getToken = false;
-      }
-    },
+
+  beforeCreate() {
+    let check_token;
+    if (this.$localStorage.get("token")) {
+      check_token = true;
+    } else {
+      check_token = false;
+    }
+    this.token = check_token;
+    console.log("token13213", this.token);
   },
-  // beforeCreate() {
-  //   this.getToken();
-  // }
 };
 </script>

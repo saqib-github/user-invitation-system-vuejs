@@ -33,7 +33,7 @@
         <template v-slot:activator="{ on }">
           <v-btn icon x-large v-on="on" class="ml-2">
             <v-avatar color="#EA8E6F" class="rounded-lg" size="40">
-              <span class="white--text text-h5">{{ user.initials }}</span>
+              <span class="white--text text-h5"> {{ user.first_name }}</span>
             </v-avatar>
           </v-btn>
         </template>
@@ -41,9 +41,9 @@
           <v-list-item-content class="justify-center">
             <div class="mx-auto text-center">
               <v-avatar color="brown" class="rounded-lg" size="40">
-                <span class="white--text text-h5">{{ user.initials }}</span>
+                <span class="white--text text-h5">MA</span>
               </v-avatar>
-              <h3 class="mt-4">{{ user.fullName }}</h3>
+              <h3 class="mt-4">{{user}}</h3>
               <p class="text-caption mt-1">
                 {{ user.email }}
               </p>
@@ -73,7 +73,6 @@
         </v-card>
       </v-menu>
     </v-app-bar>
-    {{ getUser }}
   </div>
 </template>
 
@@ -104,11 +103,7 @@ export default {
     mdiMessageAlertOutline: mdiMessageAlertOutline,
     mdiLogout: mdiLogout,
     drawer: false,
-    user: {
-      initials: "MA",
-      fullName: "Moazzam Ali Boota",
-      email: "john.doe@doe.com",
-    },
+    user: [],
   }),
   methods: {
     signOut() {
@@ -116,26 +111,31 @@ export default {
       this.$router.push("/login");
       window.location.reload();
     },
-      getUser() {
-      let url = "http://localhost:3000/api/user";
-      const headers = {
-        Authorization: `Bearer ${this.$localStorage.get("token")}`,
-      };
-      console.log("headers", headers);
-      let user = [];
+  },
+  beforeCreate() {
+    let fetched_user = [];
+    let url = "http://localhost:3000/api/user";
+    const headers = {
+      "x-access-token": `${this.$localStorage.get("token")}`,
+      "content-type": "application/json",
+    };
+    console.log("headers", headers);
 
-      Helpers.get(url, { headers: headers }).then((response) => {
-        user.push(response.data);
-        console.log("response", response);
-      }).catch((error) => {
+    Helpers.get(url, { headers: headers })
+      .then((response) => {
+        console.log("response", response.data);
+        this.user.push(response.data);
+        fetched_user.push(response.data);
+        console.log("user", this.user);
+      })
+      .catch((error) => {
         console.log("error", error);
       });
-
-      return user;
-    },
+      this.user = fetched_user
+      console.log("fetched user", fetched_user);
+      console.log("user", this.user);
+      console.log("user.firstname", this.user);
   },
-  computed: {
   
-  },
 };
 </script>

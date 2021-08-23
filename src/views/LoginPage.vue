@@ -94,7 +94,6 @@ export default {
             if (response.status == 200) {
               this.$localStorage.set("token", response.data.accessToken);
               this.$router.push("/");
-              this.$router.replaceView({ name: "inviteuser" });
               Swal.fire("Welcome", "You login successfully", "success");
             }
             if (response.status == 404) {

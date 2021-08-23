@@ -22,7 +22,7 @@ export default {
   },
   get: async (url, headers) => {
     return await axios
-      .get(url, {headers})
+      .get(url, headers)
       .then((res) => {
         console.log('res123', res);
         return res;
