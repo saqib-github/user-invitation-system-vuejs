@@ -114,7 +114,7 @@ export default {
   },
   beforeCreate() {
     let fetched_user = [];
-    let url = "http://localhost:3000/api/user";
+    let url = "http://localhost:3001/api/user";
     const headers = {
       "x-access-token": `${this.$localStorage.get("token")}`,
       "content-type": "application/json",

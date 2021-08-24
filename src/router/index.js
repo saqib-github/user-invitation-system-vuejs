@@ -19,7 +19,7 @@ const routes = [
         next({ name: "LoginPage" });
       }
     },
-    component: () => import ("../main.js")
+    component: () => import ("../views/InviteUserPage.vue"),
   },
   {
     path: "/login",

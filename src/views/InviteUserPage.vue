@@ -56,7 +56,7 @@ export default {
         );
       }
       if (this.send_invite_email) {
-        let url = "http://localhost:3000/api/user/sendmail";
+        let url = "http://localhost:3001/api/user/sendmail";
         const headers = {
           "x-access-token": `${this.$localStorage.get("token")}`,
           "content-type": "application/json",
@@ -65,6 +65,7 @@ export default {
           .post(url, { headers: headers }, { email: this.send_invite_email })
           .then((response) => {
             console.log(response);
+            Swal.fire("Sent", "thank you ", "success");
           })
           .catch((error) => console.log("error", error));
       }

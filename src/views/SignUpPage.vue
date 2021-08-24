@@ -66,6 +66,7 @@ import Swal from "sweetalert2";
 import { mdiGmail } from "@mdi/js";
 import Helpers from "../helpers/Helper.js";
 import qs from "qs";
+import jwt from "jsonwebtoken";
 export default {
   name: "SignUpPage",
   data() {
@@ -98,7 +99,7 @@ export default {
         this.address &&
         this.password
       ) {
-        const url = "http://localhost:3000/api/auth/signup";
+        const url = "http://localhost:3001/api/auth/signup";
         const user = qs.stringify({
           first_name: this.first_name,
           last_name: this.last_name,
@@ -131,6 +132,18 @@ export default {
         console.log("password: ", this.password);
       }
     },
+  },
+  created() {
+    console.log("params token", this.$route.params.token);
+    if (this.$route.params.token) {
+      let token = this.$route.params.token;
+      console.log("token", token);
+      var decoded = jwt.decode(token, { complete: true });
+      console.log("decoded", decoded);
+      console.log("email", decoded.payload.email);
+      this.email= decoded.payload.email;
+      console.log("this.email", this.email);
+    }
   },
 };
 </script>

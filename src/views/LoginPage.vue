@@ -1,5 +1,4 @@
 <template>
-  <v-app>
     <v-container
       fill-height
       fluid
@@ -65,7 +64,6 @@
         </v-container>
       </v-card>
     </v-container>
-  </v-app>
 </template>
 
 <script>
@@ -86,7 +84,7 @@ export default {
   methods: {
     login() {
       if (this.email && this.password) {
-        const url = "http://localhost:3000/api/auth/signin";
+        const url = "http://localhost:3001/api/auth/signin";
 
         Helpers.post(url, { email: this.email, password: this.password })
           .then((response) => {

@@ -2,7 +2,7 @@
   <div>
     <div>
       <v-app>
-        <app-bar v-show="token"></app-bar>
+          <app-bar v-show="token === true"></app-bar>
 
         <v-main>
           <router-view />
@@ -31,7 +31,7 @@ export default {
     };
   },
 
-  beforeCreate() {
+  created() {
     let check_token;
     if (this.$localStorage.get("token")) {
       check_token = true;
