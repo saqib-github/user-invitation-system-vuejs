@@ -6,7 +6,7 @@ Vue.use(VueRouter);
 const routes = [
   {
     path: '/',
-    name: 'App',
+    name: 'Dashboard',
     beforeEnter: (to, from, next) => {
       // ...
       console.log("token", Vue.localStorage.get("token"));
@@ -19,7 +19,31 @@ const routes = [
         next({ name: "LoginPage" });
       }
     },
-    component: () => import ("../views/InviteUserPage.vue"),
+    component: () => import ("../views/Dashboard.vue"),
+    children: [
+      {
+        path: "/inviteuser",
+    
+        name: "InviteUser",
+        beforeEnter: (to, from, next) => {
+          // ...
+          console.log("token", Vue.localStorage.get("token"));
+          if (Vue.localStorage.get("token")) {
+            console.log("get");
+            next();
+          } else {
+            console.log("not");
+    
+            next({ name: "LoginPage" });
+          }
+        },
+        // route level code-splitting
+        // this generates a separate chunk (about.[hash].js) for this route
+        // which is lazy-loaded when the route is visited.
+        component: () =>
+          import(/* webpackChunkName: "about" */ "../views/InviteUserPage.vue"),
+      },
+    ]
   },
   {
     path: "/login",
@@ -31,28 +55,7 @@ const routes = [
     name: "SignUpPage",
     component: () => import("../views/SignUpPage.vue"),
   },
-  {
-    path: "/inviteuser",
-
-    name: "InviteUser",
-    beforeEnter: (to, from, next) => {
-      // ...
-      console.log("token", Vue.localStorage.get("token"));
-      if (Vue.localStorage.get("token")) {
-        console.log("get");
-        next();
-      } else {
-        console.log("not");
-
-        next({ name: "LoginPage" });
-      }
-    },
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () =>
-      import(/* webpackChunkName: "about" */ "../views/InviteUserPage.vue"),
-  },
+ 
 ];
 
 const router = new VueRouter({
