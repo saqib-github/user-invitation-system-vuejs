@@ -22,7 +22,7 @@
                   type="password"
                 ></v-text-field>
                 <v-row>
-                  <v-btn color="primary" class="mr-4 ml-3" @click="login"
+                  <v-btn color="green" class="mr-4 ml-3 white--text" @click="login"
                     >Login</v-btn
                   >
                   <!-- sign up dialog start from below -->
