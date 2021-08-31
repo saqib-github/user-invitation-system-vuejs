@@ -1,22 +1,20 @@
 <template>
   <div>
-    <v-app app>
-      <app-bar v-show="token === true"></app-bar>
-
-      <v-main>
-        <router-view />
-      </v-main>
-    </v-app>
+   <dashboard-layout>
+     <router-view></router-view>
+   </dashboard-layout>
   </div>
 </template>
 
 <script>
-import AppBar from "../components/AppBar.vue";
+// import AppBar from "../components/AppBar.vue";
+import DashboardLayout from "../layouts/dashboards/DashboardsLayout.vue";
 
 export default {
   name: "App",
   components: {
-    AppBar: AppBar,
+    // AppBar: AppBar,
+    'dashboard-layout': DashboardLayout,
   },
 
   data() {
@@ -29,15 +27,6 @@ export default {
     };
   },
 
-  created() {
-    let check_token;
-    if (this.$localStorage.get("token")) {
-      check_token = true;
-    } else {
-      check_token = false;
-    }
-    this.token = check_token;
-    console.log("token13213", this.token);
-  },
+  created() {},
 };
 </script>

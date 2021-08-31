@@ -16,6 +16,30 @@
             >Invite users</v-btn
           >
         </v-list-item>
+        <v-list-item>
+          <v-btn text to="/products">
+            <v-icon medium class="pr-2">{{
+              mdiAccountSupervisorOutline
+            }}</v-icon
+            >Products</v-btn
+          >
+        </v-list-item>
+        <v-list-item>
+          <v-btn text to="/venders">
+            <v-icon medium class="pr-2">{{
+              mdiAccountSupervisorOutline
+            }}</v-icon
+            >Venders</v-btn
+          >
+        </v-list-item>
+        <v-list-item>
+          <v-btn text to="/customers">
+            <v-icon medium class="pr-2">{{
+              mdiAccountSupervisorOutline
+            }}</v-icon
+            >Customers</v-btn
+          >
+        </v-list-item>
       </v-list>
     </v-navigation-drawer>
     <v-app-bar app clipped-left dark color="white" flat>
@@ -33,7 +57,9 @@
         <template v-slot:activator="{ on }">
           <v-btn icon x-large v-on="on" class="ml-2">
             <v-avatar color="#EA8E6F" class="rounded-lg" size="40">
-              <span class="white--text text-h5"> {{ user.first_name }}</span>
+              <span class="white--text text-h5">
+                {{ user_initials || "MA" }}</span
+              >
             </v-avatar>
           </v-btn>
         </template>
@@ -41,12 +67,12 @@
           <v-list-item-content class="justify-center">
             <div class="mx-auto text-center">
               <v-avatar color="brown" class="rounded-lg" size="40">
-                <span class="white--text text-h5">MA</span>
+                <span class="white--text text-h5">{{ user_initials }}</span>
               </v-avatar>
-              <h3 class="mt-4">{{user}}</h3>
               <p class="text-caption mt-1">
-                {{ user.email }}
+                Email: {{ user.email }}
               </p>
+              <h4 class="mb-5">Name: {{user.first_name}} {{user.last_name}}</h4>
               <v-btn color="#EAEAEA" depressed small>Profile Settings</v-btn>
               <v-divider class="my-3"></v-divider>
               <div>
@@ -103,7 +129,8 @@ export default {
     mdiMessageAlertOutline: mdiMessageAlertOutline,
     mdiLogout: mdiLogout,
     drawer: false,
-    user: [],
+    user: {},
+    user_initials: "",
   }),
   methods: {
     signOut() {
@@ -113,7 +140,7 @@ export default {
     },
   },
   beforeCreate() {
-    let fetched_user = [];
+    let fetched_user = {};
     let url = "http://localhost:3001/api/user";
     const headers = {
       "x-access-token": `${this.$localStorage.get("token")}`,
@@ -123,19 +150,17 @@ export default {
 
     Helpers.get(url, { headers: headers })
       .then((response) => {
-        console.log("response", response.data);
-        this.user.push(response.data);
-        fetched_user.push(response.data);
-        console.log("user", this.user);
+        fetched_user = response.data;
+        this.user = fetched_user;
+        console.log("user.firstname121", this.user.first_name[0]);
+        this.user_initials =
+          this.user.first_name[0].toUpperCase() +
+          this.user.first_name[1].toUpperCase();
+        console.log("user_initials", this.user_initials);
       })
       .catch((error) => {
         console.log("error", error);
       });
-      this.user = fetched_user
-      console.log("fetched user", fetched_user);
-      console.log("user", this.user);
-      console.log("user.firstname", this.user);
   },
-  
 };
 </script>

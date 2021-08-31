@@ -23,7 +23,7 @@
                     label="Enter email of your friend"
                   ></v-text-field>
                   <v-btn color="primary" @click="sendInvite">Send Invite</v-btn>
-                  <v-btn @click="dialog = false" color="primary" small text
+                  <v-btn @click="dialog = false" color="red" text class="ml-3"
                     >close</v-btn
                   >
                 </v-flex>

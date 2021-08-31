@@ -31,9 +31,9 @@ export default {
         return err;
       });
   },
-  async deleteById(url) {
+   deleteById: async (url, headers) => {
     return await axios
-      .delete(url)
+      .delete(url, headers)
       .then((res) => {
         return res;
       })
