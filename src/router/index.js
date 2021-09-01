@@ -26,21 +26,26 @@ const routes = [
         name: "InviteUser",
         component: () =>
           import("../views/InviteUserPage.vue"),
+          meta: { parent: "Dashboard"}
       },
       {
         path: "/products",
         name: "Products",
         component: () => import("../views/pages/products/Products.vue"),
+        meta: { parent: "Dashboard"}
       }, 
       {
         path: "/venders",
         name: "Vendor",
         component: () => import("../views/pages/venders/Venders.vue"),
+        meta: { parent: "Dashboard"}
       }, 
       {
         path: "/customers",
         name: "Customer",
         component: () => import("../views/pages/customers/Customers.vue"),
+        children: [],
+        meta: { parent: "Dashboard"}
       },
     ],
   },

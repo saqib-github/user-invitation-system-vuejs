@@ -1,74 +1,42 @@
+/* eslint-disable no-unused-vars */
 <template>
   <v-container>
-    <v-container>
-      <!-- <v-layout row wrap>
-        <v-flex xs12 md3>
-          <v-text-field outlined label="Search"></v-text-field>
-        </v-flex>
-      </v-layout> -->
-      <v-layout row wrap>
-        <v-flex xs12 md4>
-          <h3>Search by Filters</h3>
-        </v-flex>
-      </v-layout>
-      <v-layout row wrap>
-        <v-flex xs4 md1> <v-checkbox label="Date"></v-checkbox> </v-flex
-        ><v-flex xs4 md1> <v-checkbox label="alphabetic"></v-checkbox> </v-flex>
-      </v-layout>
-    </v-container>
-    
-    <v-card dense>
-      <v-card-title>
-        <h2>Products</h2>
-        <v-spacer></v-spacer>
-        <v-text-field
-          v-model="search"
-          outlined
-          append-icon="mdi-magnify"
-          label="Search"
-          single-line
-          hide-details
-        ></v-text-field>
-      </v-card-title>
-      <v-data-table :headers="headers" :items="products" :search="search">
-        <template v-slot:[`item.delete`]="{ item }">
-          <v-icon @click="deleteItem(item.city)" color="red">{{
-            mdiTrashCan
-          }}</v-icon>
-        </template>
-        <template v-slot:[`item.edit`]="{ item }">
-          <v-icon @click="editItem(item.city)" color="green">{{ mdiPencil }}</v-icon>
-        </template>
-      </v-data-table>
-    </v-card>
+    <data-table
+      :headers="headers"
+      :items="products"
+      :search="search"
+      :name="name"
+      @deleteItem="deleteItem"
+      @editItem="editItem"
+    >
+    </data-table>
   </v-container>
 </template>
 
 <script>
-import { mdiDotsVertical } from "@mdi/js";
-import { mdiTrashCan } from "@mdi/js";
-import { mdiPencil } from "@mdi/js";
 import Helpers from "@/helpers/Helper.js";
+import Swal from "sweetalert2";
+import DataTable from "../../../components/DataTable.vue";
 export default {
   name: "products-component",
+  components: {
+    DataTable,
+  },
   data() {
     return {
-      mdiDotsVertical: mdiDotsVertical,
-      mdiTrashCan: mdiTrashCan,
-      mdiPencil: mdiPencil,
       search: "",
+      name: "Products",
       headers: [
         {
           text: "Name",
           align: "start",
-          sortable: false,
           value: "name",
         },
         { text: "Price", value: "price" },
         { text: "Category", value: "category" },
         { text: "Quantity", value: "quantity" },
-        { text: "Delete", value: "delete" },
-        { text: "Edit", value: "edit" },
+        { text: "Date", value: "Date" },
+        { text: "Actions", value: "delete" },
       ],
       products: [
         {
@@ -81,10 +49,44 @@ export default {
     };
   },
   methods: {
-    deleteItem(){},
-    editItem(){}
+    deleteItem(_id) {
+      console.log("id", _id);
+      Swal.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          // eslint-disable-next-line no-unused-vars
+          let url = `http://localhost:3001/api/products/${_id}`;
+          const headers = {
+            "x-access-token": `${this.$localStorage.get("token")}`,
+            "content-type": "application/json",
+          };
+          Helpers.deleteById(url, { headers: headers })
+            .then((response) => {
+              console.log("delete response", response);
+              let idx = this.products.findIndex((p) => p._id === _id);
+              console.log("idx", idx);
+              this.products.splice(idx, 1);
+              Swal.fire("Deleted!", response.data.message, "success");
+            })
+            .catch((error) => {
+              console.log("error", error);
+            });
+        }
+      });
+    },
+    // eslint-disable-next-line no-unused-vars
+    editItem(_id) {
+      
+    },
   },
-   beforeCreate() {
+  beforeCreate() {
     // eslint-disable-next-line no-unused-vars
     let fetched_products = [];
     // eslint-disable-next-line no-unused-vars
@@ -97,7 +99,7 @@ export default {
     Helpers.get(url, { headers: headers }).then((response) => {
       console.log("response", response);
       fetched_products = response.data;
-      this.products = fetched_products
+      this.products = fetched_products;
     });
   },
 };

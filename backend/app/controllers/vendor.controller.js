@@ -3,12 +3,20 @@ const db = require("../models");
 const Vendor = db.vendor;
 
 exports.allVendors = async (req, res) => {
-    try {
-        const vendors = await Vendor.find({});
-        console.log(vendors)
-        res.status(200).json(vendors);
-
-    } catch (err) {
-        res.json({message: err.message});
-    }
-}
+  try {
+    const vendors = await Vendor.find({});
+    console.log(vendors);
+    res.status(200).json(vendors);
+  } catch (err) {
+    res.json({ message: err.message });
+  }
+};
+exports.deleteVendor = async (req, res) => {
+  try {
+    const vendor = await Vendor.findByIdAndDelete({ _id: req.params.id });
+    console.log(vendor);
+    res.status(200).json({ message: "Vendor deleted successfully" });
+  } catch (err) {
+    res.json({ message: err.message });
+  }
+};

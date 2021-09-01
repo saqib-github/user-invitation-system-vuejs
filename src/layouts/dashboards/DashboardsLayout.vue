@@ -5,6 +5,20 @@
 
       <v-main>
         <v-container>
+          <v-layout row wrap>
+            <v-flex xs12 md12>
+            <v-row>
+              <v-col>
+              <span>
+                <v-btn text to="/" color="primary">{{$route.meta.parent}}</v-btn>
+                <v-btn text color="primary" disabled>{{$route.path}}</v-btn>
+              </span>
+              </v-col>
+            </v-row>
+            </v-flex>
+          </v-layout>
+        </v-container>
+        <v-container>
           <v-layout>
             <v-flex xs12 md10>
               <v-btn text></v-btn>
@@ -33,9 +47,12 @@ export default {
         type: Boolean,
         default: false,
       },
+      to: '',
     };
   },
 
-  created() {},
+  created() {
+
+  },
 };
 </script>

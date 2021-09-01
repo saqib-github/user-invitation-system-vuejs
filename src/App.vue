@@ -8,11 +8,12 @@
 <script>
 // import Login from "./views/LoginPage.vue";
 export default {
-   name: "",
+  name: "",
   components: {
     // Login: Login,
   },
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+</style>
