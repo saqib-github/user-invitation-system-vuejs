@@ -10,8 +10,8 @@
     >
     </data-table>
     <!-- ................ -->
-    <v-dialog v-model="dialog" max-width="500px" persistent class="round">
-      <v-card height="450">
+    <v-dialog v-model="dialog" max-width="550px" persistent class="round">
+      <v-card height="500" class="round">
         <v-card-title class="pt-7 round">
           <span class="text-h5">Edit Vendor Details</span>
         </v-card-title>
@@ -20,11 +20,18 @@
             <v-layout row wrap justify-center>
               <v-flex xs12 md9>
                 <v-text-field
-                  label="Vendor Name"
+                  label="Vendor First Name"
                   outlined
                   rounded
                   dense
-                  v-model.trim="vendor_name"
+                  v-model.trim="vendor_first_name"
+                ></v-text-field>
+                <v-text-field
+                  label="Vendor Last Name"
+                  outlined
+                  rounded
+                  dense
+                  v-model.trim="vendor_last_name"
                 ></v-text-field>
                 <v-text-field
                   label="Vendor Email"
@@ -53,16 +60,31 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="primary" @click="saveCustomer" text>Save</v-btn>
+          <v-btn color="blue" text @click="saveVendor">Save</v-btn>
           <v-btn color="red" text @click="dialog = false">Close</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
+    <!-- .................... -->
+    <loader
+      v-if="loader"
+      object="#33a7ff"
+      color1="#ffffff"
+      color2="#17fd3d"
+      size="5"
+      speed="1.5"
+      bg="#343a40"
+      objectbg="#999793"
+      opacity="80"
+      disableScrolling="false"
+      name="dots"
+    ></loader>
   </v-container>
 </template>
 
 <script>
 import Helpers from "@/helpers/Helper.js";
+import config from "@/config/config.js";
 import Swal from "sweetalert2";
 import DataTable from "../../../components/DataTable.vue";
 export default {
@@ -73,11 +95,15 @@ export default {
       search: "",
       name: "Vendors",
       dialog: false,
+      loader: false,
       // data for edit vendors /v-models
-      vendor_name: '',
-      vendor_email: '',
-      vendor_city: '',
-      vendor_counrty: '',
+      vendor_first_name: "",
+      vendor_last_name: "",
+      vendor_email: "",
+      vendor_city: "",
+      vendor_country: "",
+      id: "",
+      index: Number,
       // data for edit vendors /v-models
       headers: [
         {
@@ -88,6 +114,7 @@ export default {
         { text: "Email", value: "email" },
         { text: "City", value: "city" },
         { text: "Country", value: "country" },
+        { text: "Date", value: "Date" },
         { text: "Actions", value: "delete" },
       ],
       vendors: [
@@ -114,7 +141,7 @@ export default {
       }).then((result) => {
         if (result.isConfirmed) {
           // eslint-disable-next-line no-unused-vars
-          let url = `http://localhost:3001/api/vendors/${_id}`;
+          let url = `http://${config.URL_CONSTANTS}:${config.API_PORT}/api/vendors/${_id}`;
           const headers = {
             "x-access-token": `${this.$localStorage.get("token")}`,
             "content-type": "application/json",
@@ -136,13 +163,47 @@ export default {
     // eslint-disable-next-line no-unused-vars
     editItem(_id) {
       this.dialog = true;
-       console.log("customer_id", _id);
-      let idx = this.vendors.findIndex((p) => p._id === _id);
-      console.log("idx", idx);
-      this.vendor_name = this.vendors[idx].first_name;
-      this.vendor_email = this.vendors[idx].email;
-      this.vendor_city = this.vendors[idx].city;
-      this.vendor_country = this.vendors[idx].country;
+      console.log("customer_id", _id);
+      this.index = this.vendors.findIndex((p) => p._id === _id);
+      this.id = _id;
+      console.log("index", this.index);
+      this.vendor_first_name = this.vendors[this.index].first_name;
+      this.vendor_last_name = this.vendors[this.index].last_name;
+      this.vendor_email = this.vendors[this.index].email;
+      this.vendor_city = this.vendors[this.index].city;
+      this.vendor_country = this.vendors[this.index].country;
+    },
+    saveVendor() {
+      this.loader = true;
+      console.log("update vali id", this.id);
+      let url = `http://localhost:3001/api/vendors/${this.id}`;
+      const headers = {
+        "x-access-token": `${this.$localStorage.get("token")}`,
+        "content-type": "application/json",
+      };
+      const updateVendor = {
+        first_name: this.vendor_first_name,
+        last_name: this.vendor_last_name,
+        email: this.vendor_email,
+        city: this.vendor_city,
+        country: this.vendor_country,
+      };
+      console.log("updateVendor", updateVendor);
+      Helpers.updateById(url, updateVendor, { headers: headers })
+        .then((response) => {
+          console.log("response", response);
+          this.vendors[this.index].first_name = this.vendor_first_name;
+          this.vendors[this.index].last_name = this.vendor_last_name;
+          this.vendors[this.index].email = this.vendor_email;
+          this.vendors[this.index].city = this.vendor_city;
+          this.vendors[this.index].country = this.vendor_country;
+          this.dialog = false;
+          Swal.fire("Updated", response.data.message, "success");
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+      this.loader = false;
     },
   },
   beforeCreate() {
@@ -163,4 +224,8 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.round {
+  border-radius: 30px;
+}
+</style>

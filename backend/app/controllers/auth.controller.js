@@ -1,5 +1,6 @@
 const config = require("../config/auth.config");
 const db = require("../models");
+const faker = require("faker");
 const User = db.user;
 const Role = db.role;
 
@@ -13,60 +14,60 @@ exports.signup = (req, res) => {
     address: req.body.address,
     email: req.body.email,
     password: bcrypt.hashSync(req.body.password, 8),
+    image: faker.image.avatar(),
   });
 
-  if(req.params.token){
+  if (req.params.token) {
     console.log("token", req.params.token);
   } else {
+    user.save((err, user) => {
+      if (err) {
+        res.status(500).send({ message: err });
+        return;
+      }
 
-  user.save((err, user) => {
-    if (err) {
-      res.status(500).send({ message: err });
-      return;
-    }
+      if (req.body.roles) {
+        Role.find(
+          {
+            name: { $in: req.body.roles },
+          },
+          (err, roles) => {
+            if (err) {
+              res.status(500).send({ message: err });
+              return;
+            }
 
-    if (req.body.roles) {
-      Role.find(
-        {
-          name: { $in: req.body.roles },
-        },
-        (err, roles) => {
+            user.roles = roles.map((role) => role._id);
+            user.save((err) => {
+              if (err) {
+                res.status(500).send({ message: err });
+                return;
+              }
+
+              res.send({ message: "User was registered successfully" });
+            });
+          }
+        );
+      } else {
+        Role.findOne({ name: "user" }, (err, role) => {
           if (err) {
             res.status(500).send({ message: err });
             return;
           }
 
-          user.roles = roles.map((role) => role._id);
+          user.roles = [role._id];
           user.save((err) => {
             if (err) {
               res.status(500).send({ message: err });
               return;
             }
 
-            res.send({ message: "User was registered successfully" });
+            res.send({ message: "User was registered successfully!" });
           });
-        }
-      );
-    } else {
-      Role.findOne({ name: "user" }, (err, role) => {
-        if (err) {
-          res.status(500).send({ message: err });
-          return;
-        }
-
-        user.roles = [role._id];
-        user.save((err) => {
-          if (err) {
-            res.status(500).send({ message: err });
-            return;
-          }
-
-          res.send({ message: "User was registered successfully!" });
         });
-      });
-    }
-  });
-}
+      }
+    });
+  }
 };
 exports.signin = (req, res) => {
   User.findOne({
@@ -110,5 +111,3 @@ exports.signin = (req, res) => {
       });
     });
 };
-
-

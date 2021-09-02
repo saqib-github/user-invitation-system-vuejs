@@ -7,55 +7,19 @@ export default {
         return res;
       })
       .catch((err) => {
-        return ({status: err.response.status}); 
+        return { status: err.response.status };
       });
   },
-  async getById(url) {
-    return await axios
-      .get(url)
-      .then((res) => {
-        return res;
-      })
-      .catch((err) => {
-        return err;
-      });
+  async getById(url, headers) {
+    return await axios.get(url, headers);
   },
   get: async (url, headers) => {
-    return await axios
-      .get(url, headers)
-      .then((res) => {
-        console.log('res123', res);
-        return res;
-      })
-      .catch((err) => {
-        return err;
-      });
+    return await axios.get(url, headers);
   },
-   deleteById: async (url, headers) => {
-    return await axios
-      .delete(url, headers)
-      .then((res) => {
-        return res;
-      })
-      .catch((err) => {
-        return err;
-      });
+  deleteById: async (url, headers) => {
+    return await axios.delete(url, headers);
   },
-  async updateById(url, data) {
-    return await axios
-      .put(url, data)
-      .then((res) => {
-        return res.json();
-      })
-      .catch((err) => {
-        return err.json();
-      });
+  updateById: async (url, headers, data) => {
+    return await axios.put(url, headers, data);
   },
-   isNotLogedin : () => {
-    if (this.$localStorage.get("token") == 1) {
-      return true;
-    } else {
-      return false;
-    }
-  }
 };

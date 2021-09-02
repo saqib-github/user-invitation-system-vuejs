@@ -1,5 +1,5 @@
 <template>
-  <v-container fill-height fluid class="justify-center red darken-1">
+  <v-container fill-height fluid class="justify-center red darken-1 bg-image">
     <v-card height="500" width="600">
       <v-container fill-height fluid>
         <v-layout row wrap justify-center align-center>
@@ -147,4 +147,9 @@ export default {
   },
 };
 </script>
-<style></style>
+<style>
+.bg-image {
+  background: url("../assets/images/background-image.jpg");
+  background-size: cover;
+}
+</style>

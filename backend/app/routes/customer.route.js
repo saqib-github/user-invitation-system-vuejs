@@ -7,7 +7,11 @@ const controller = require("../controllers/customer.controller.js");
 const router = express.Router();
 
 router.get("/", [authJwt.verifyToken], controller.allCustomers);
-router.delete("/:id", [authJwt.verifyToken], controller.deleteCustomer);
-
+router.delete(
+  "/:id",
+  [authJwt.verifyToken, authJwt.isAdmin],
+  controller.deleteCustomer
+);
+router.put("/:id", [authJwt.verifyToken], controller.updateCustomer);
 
 module.exports = router;

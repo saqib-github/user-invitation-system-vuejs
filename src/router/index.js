@@ -20,6 +20,7 @@ const routes = [
       }
     },
     component: () => import("../views/Dashboard.vue"),
+    meta: { parent: "Dashboard"},
     children: [
       {
         path: "/inviteuser",

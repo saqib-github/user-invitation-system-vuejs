@@ -10,21 +10,28 @@
       @editItem="editItem"
     >
     </data-table>
-    <v-dialog v-model="dialog" max-width="500px" persistent class="round">
-      <v-card height="450">
+    <v-dialog v-model="dialog" max-width="550px" persistent class="round">
+      <v-card height="500" class="round">
         <v-card-title class="pt-7 round">
-          <span class="text-h5">Edit Customer Details</span>
+          <span class="text-h5 font-weight-bold">Edit Customer Details</span>
         </v-card-title>
         <v-card-text class="pt-7">
           <v-container>
             <v-layout row wrap justify-center>
               <v-flex xs12 md9>
                 <v-text-field
-                  label="Customer Name"
+                  label="First Name"
                   outlined
                   rounded
                   dense
-                  v-model.trim="customer_name"
+                  v-model.trim="customer_first_name"
+                ></v-text-field>
+                <v-text-field
+                  label="Last Name"
+                  outlined
+                  rounded
+                  dense
+                  v-model.trim="customer_last_name"
                 ></v-text-field>
                 <v-text-field
                   label="Customer Email"
@@ -58,6 +65,20 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+    <!-- ......... -->
+    <loader
+      v-if="loader"
+      object="#33a7ff"
+      color1="#ffffff"
+      color2="#17fd3d"
+      size="5"
+      speed="1.5"
+      bg="#343a40"
+      objectbg="#999793"
+      opacity="80"
+      disableScrolling="false"
+      name="dots"
+    ></loader>
   </v-container>
 </template>
 
@@ -75,11 +96,15 @@ export default {
       name: "Customers",
       search: "",
       dialog: false,
+      loader: false,
       // data for edit customers /v-models
-      customer_name: "",
+      customer_first_name: "",
+      customer_last_name: "",
       customer_email: "",
       customer_city: "",
       customer_country: "",
+      id: "",
+      index: Number,
       // data for edit customers /v-models
       headers: [
         {
@@ -90,7 +115,7 @@ export default {
         { text: "Email", value: "email" },
         { text: "City", value: "city" },
         { text: "Country", value: "country" },
-        { text: "Date", value: "date" },
+        { text: "Date", value: "Date" },
         { text: "Actions", value: "delete" },
       ],
       customers: [],
@@ -118,15 +143,15 @@ export default {
           };
           Helpers.deleteById(url, { headers: headers })
             .then((response) => {
-              console.log("delete response", response);
-              console.log("delete sortAlphabetic", this.sortAlphabetic);
-              let idx = this.customers.findIndex((p) => p._id === _id);
-              console.log("idx", idx);
-              this.customers.splice(idx, 1);
-              Swal.fire("Deleted!", response.data.message, "success");
+                this.index = this.customers.findIndex((p) => p._id === _id);
+                console.log("idx", this.index);
+                this.customers.splice(this.index, 1);
+                Swal.fire("Deleted!", response.data.message, "success");
+              
             })
             .catch((error) => {
-              console.log("error", error);
+              console.log("error response", error.response);
+              Swal.fire("Sorry", error.response.data.message, "error");
             });
         }
       });
@@ -135,17 +160,49 @@ export default {
     editItem(_id) {
       this.dialog = true;
       console.log("customer_id", _id);
-      let idx = this.customers.findIndex((p) => p._id === _id);
-      console.log("idx", idx);
-      this.customer_name = this.customers[idx].first_name;
-      this.customer_email = this.customers[idx].email;
-      this.customer_city = this.customers[idx].city;
-      this.customer_country = this.customers[idx].country;
+      this.index = this.customers.findIndex((p) => p._id === _id);
+      console.log("idx", this.index);
+      this.id = _id;
+      this.customer_first_name = this.customers[this.index].first_name;
+      this.customer_last_name = this.customers[this.index].last_name;
+      this.customer_email = this.customers[this.index].email;
+      this.customer_city = this.customers[this.index].city;
+      this.customer_country = this.customers[this.index].country;
     },
     saveCustomer() {
-      console.log("customer_name", this.customer_name);
+      this.loader = true;
+      console.log("update vali id", this.id);
+      let url = `http://localhost:3001/api/customers/${this.id}`;
+      const headers = {
+        "x-access-token": `${this.$localStorage.get("token")}`,
+        "content-type": "application/json",
+      };
+      const updateCustomer = {
+        first_name: this.customer_first_name,
+        last_name: this.customer_last_name,
+        email: this.customer_email,
+        city: this.customer_city,
+        country: this.customer_country,
+      };
+      console.log("updateCustomer", updateCustomer);
+      Helpers.updateById(url, updateCustomer, { headers: headers })
+        .then((response) => {
+          console.log("response", response);
+          this.customers[this.index].first_name = this.customer_first_name;
+          this.customers[this.index].last_name = this.customer_last_name;
+          this.customers[this.index].email = this.customer_email;
+          this.customers[this.index].city = this.customer_city;
+          this.customers[this.index].country = this.customer_country;
+          this.dialog = false;
+          Swal.fire("Updated", response.data.message, "success");
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+        this.loader = false;
     },
     allCustomers() {
+      this.loader = true;
       let fetched_customers = [];
       // eslint-disable-next-line no-unused-vars
       let url = "http://localhost:3001/api/customers";
@@ -165,6 +222,7 @@ export default {
           console.log("error", error);
         });
       console.log("customers", this.customers);
+      this.loader = false;
     },
   },
   created() {

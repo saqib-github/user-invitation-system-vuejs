@@ -11,6 +11,8 @@ const userRoute = require("./app/routes/user.routes.js");
 const productRoute = require("./app/routes/product.route.js");
 const vendorRoute = require("./app/routes/vendor.route.js");
 const customerRoute = require("./app/routes/customer.route.js");
+// fake data inserter routes 
+const fakeRoute = require("./app/routes/fake.route.js");
 
 const app = express();
 
@@ -33,6 +35,7 @@ db.mongoose
   .connect(`mongodb://${dbConfig.HOST}:${dbConfig.PORT}/${dbConfig.DB}`, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
+    useFindAndModify: false,
   })
   .then(() => {
     console.log("Successfully Connected to database");
@@ -55,6 +58,8 @@ app.use("/api/user", userRoute);
 app.use("/api/products", productRoute);
 app.use("/api/vendors", vendorRoute);
 app.use("/api/customers", customerRoute);
+// fake data inserter
+app.use("/api/fake", fakeRoute);
 
 // initial function callings
 

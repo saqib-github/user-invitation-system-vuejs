@@ -1,6 +1,5 @@
 <template>
   <v-container fill-height fluid class="justify-center">
-
     <v-card height="180" width="400">
       <v-container fill-height fluid class="justify-center">
         <h1>Invite a new user</h1>
@@ -10,7 +9,6 @@
             <v-btn color="primary" x-large dark v-bind="attrs" v-on="on">
               Send Invitation Link
             </v-btn>
-
           </template>
 
           <v-card height="200">
@@ -34,12 +32,10 @@
         <!-- invitation dialog box end here -->
       </v-container>
     </v-card>
-
-
   </v-container>
 </template>
- <script src="path/to/vue.js"></script>
-  <script src="path/to/vue-simple-spinner.js"></script>
+<script src="path/to/vue.js"></script>
+<script src="path/to/vue-simple-spinner.js"></script>
 <script>
 import Swal from "sweetalert2";
 import Spinner from "vue-simple-spinner";
@@ -48,7 +44,7 @@ import axios from "axios";
 export default {
   name: "InviteUserPage",
   components: {
-    'vue-simple-spinner': Spinner,
+    "vue-simple-spinner": Spinner,
   },
   data() {
     return {
@@ -74,9 +70,10 @@ export default {
           "content-type": "application/json",
         };
         axios
-          .post(url, { email: this.send_invite_email}, { headers: headers })
+          .post(url, { email: this.send_invite_email }, { headers: headers })
           .then((response) => {
             console.log(response);
+            this.dialog = false;
             Swal.fire("Invitation Link Sent", "Thank you ", "success");
           })
           .catch((error) => {

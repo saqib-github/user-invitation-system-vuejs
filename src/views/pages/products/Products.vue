@@ -10,6 +10,20 @@
       @editItem="editItem"
     >
     </data-table>
+    <!-- ................. -->
+    <loader
+      v-if="loader"
+      object="#33a7ff"
+      color1="#ffffff"
+      color2="#17fd3d"
+      size="5"
+      speed="1.5"
+      bg="#343a40"
+      objectbg="#999793"
+      opacity="80"
+      disableScrolling="false"
+      name="dots"
+    ></loader>
   </v-container>
 </template>
 
@@ -25,6 +39,7 @@ export default {
   data() {
     return {
       search: "",
+      loader: false,
       name: "Products",
       headers: [
         {
@@ -82,11 +97,10 @@ export default {
       });
     },
     // eslint-disable-next-line no-unused-vars
-    editItem(_id) {
-      
-    },
+    editItem(_id) {},
   },
   beforeCreate() {
+    this.loader = true;
     // eslint-disable-next-line no-unused-vars
     let fetched_products = [];
     // eslint-disable-next-line no-unused-vars
@@ -101,6 +115,7 @@ export default {
       fetched_products = response.data;
       this.products = fetched_products;
     });
+    this.loader = false;
   },
 };
 </script>

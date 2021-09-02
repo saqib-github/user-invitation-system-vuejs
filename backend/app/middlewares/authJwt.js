@@ -4,7 +4,7 @@ const db = require("../models");
 const User = db.user;
 const Role = db.role;
 
-verifyToken = (req, res, next) => {
+exports.verifyToken = (req, res, next) => {
   let token = req.headers["x-access-token"];
 
   if (!token) {
@@ -20,10 +20,10 @@ verifyToken = (req, res, next) => {
   });
 };
 
-isAdmin = (req, res, next) => {
+exports.isAdmin = (req, res, next) => {
   User.findById(req.userId).exec((err, user) => {
     if (err) {
-      res.status(500).send({ message: err });
+      res.status(500).json({ message: err.message });
       return;
     }
 
@@ -33,7 +33,7 @@ isAdmin = (req, res, next) => {
       },
       (err, roles) => {
         if (err) {
-          res.status(500).send({ message: err });
+          res.status(500).json({ message: err.message });
           return;
         }
 
@@ -44,14 +44,14 @@ isAdmin = (req, res, next) => {
           }
         }
 
-        res.status(403).send({ message: "Require Admin Role!" });
+        res.status(403).json({ message: "Require Admin Role!" });
         return;
       }
     );
   });
 };
 
-isModerator = (req, res, next) => {
+exports.isModerator = (req, res, next) => {
   User.findById(req.userId).exec((err, user) => {
     if (err) {
       res.status(500).send({ message: err });
@@ -81,10 +81,33 @@ isModerator = (req, res, next) => {
     );
   });
 };
+exports.isUser = (req, res, next) => {
+  User.findById(req.userId).exec((err, user) => {
+    if (err) {
+      res.status(500).send({ message: err });
+      return;
+    }
 
-const authJwt = {
-  verifyToken,
-  isAdmin,
-  isModerator
+    Role.find(
+      {
+        _id: { $in: user.roles }
+      },
+      (err, roles) => {
+        if (err) {
+          res.status(500).send({ message: err });
+          return;
+        }
+
+        for (let i = 0; i < roles.length; i++) {
+          if (roles[i].name === "user") {
+            next();
+            return;
+          }
+        }
+
+        res.status(403).send({ message: "Require User Role!" });
+        return;
+      }
+    );
+  });
 };
-module.exports = authJwt;

@@ -67,13 +67,18 @@
           <v-list-item-content class="justify-center">
             <div class="mx-auto text-center">
               <v-avatar color="brown" class="rounded-lg" size="40">
-                <span class="white--text text-h5">{{ user_initials }}</span>
+                <img v-if="user.image" :src="user.image" alt="John" />
+                <span v-else class="white--text text-h5">
+                  {{ user_initials || "MA" }}</span
+                >
               </v-avatar>
-              <p class="text-caption mt-1">
-                Email: {{ user.email }}
-              </p>
-              <h4 class="mb-5">Name: {{user.first_name}} {{user.last_name}}</h4>
-              <v-btn color="#EAEAEA" depressed small>Profile Settings</v-btn>
+              <p class="text-caption mt-1">Email: {{ user.email }}</p>
+              <h4 class="mb-5">
+                Name: {{ user.first_name }} {{ user.last_name }}
+              </h4>
+              <v-btn color="#EAEAEA" depressed small @click="openDialog"
+                >Profile Settings</v-btn
+              >
               <v-divider class="my-3"></v-divider>
               <div>
                 <v-btn depressed rounded text
@@ -99,6 +104,67 @@
         </v-card>
       </v-menu>
     </v-app-bar>
+    <!-- .........dialog............ -->
+    <v-dialog v-model="dialog" max-width="550px" persistent class="round">
+      <v-card height="520" class="round">
+        <v-card-title class="pt-7 round">
+          <span class="text-h5 font-weight-bold">Edit Your Profile</span>
+        </v-card-title>
+        <v-card-text class="pt-7">
+          <v-container>
+            <v-layout row wrap justify-center>
+              <v-flex xs12 md9>
+                <v-text-field
+                  label="Select File"
+                  type="file"
+                  enctype="multipart/form-data"
+                  v-model="user_profile_pic"
+                  color="blue"
+                  solo
+                  rounded
+                  dense
+                >
+                </v-text-field>
+                <v-text-field
+                  label="First Name"
+                  outlined
+                  rounded
+                  dense
+                  v-model.trim="user_first_name"
+                ></v-text-field>
+                <v-text-field
+                  label="Last Name"
+                  outlined
+                  rounded
+                  dense
+                  v-model.trim="user_last_name"
+                ></v-text-field>
+                <v-text-field
+                  label="Customer Email"
+                  outlined
+                  rounded
+                  dense
+                  v-model.trim="user_email"
+                ></v-text-field>
+                <v-text-field
+                  label="Customer City"
+                  outlined
+                  rounded
+                  dense
+                  v-model.trim="user_address"
+                ></v-text-field>
+              </v-flex>
+            </v-layout>
+          </v-container>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="primary" @click="saveUserProfile" text>Save</v-btn>
+          <v-btn color="red" text @click="dialog = false">Close</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <!-- .........dialog............ -->
   </div>
 </template>
 
@@ -128,6 +194,14 @@ export default {
     mdiHelpBox: mdiHelpBox,
     mdiMessageAlertOutline: mdiMessageAlertOutline,
     mdiLogout: mdiLogout,
+    // .........data for edit user profile values/v-models..........,
+    user_profile_pic: "",
+    user_first_name: "",
+    user_last_name: "",
+    user_email: "",
+    user_address: "",
+    // ...................,
+    dialog: false,
     drawer: false,
     user: {},
     user_initials: "",
@@ -137,6 +211,16 @@ export default {
       this.$localStorage.remove("token");
       this.$router.push("/login");
       window.location.reload();
+    },
+    openDialog() {
+      this.dialog = true;
+      this.user_first_name = this.user.first_name;
+      this.user_last_name = this.user.last_name;
+      this.user_email = this.user.email;
+      this.user_address = this.user.address;
+    },
+    saveUserProfile() {
+      console.log("user_profile pic", this.user_profile_pic);
     },
   },
   beforeCreate() {
@@ -153,6 +237,7 @@ export default {
         fetched_user = response.data;
         this.user = fetched_user;
         console.log("user.firstname121", this.user.first_name[0]);
+        console.log("user", this.user);
         this.user_initials =
           this.user.first_name[0].toUpperCase() +
           this.user.first_name[1].toUpperCase();
@@ -164,3 +249,8 @@ export default {
   },
 };
 </script>
+<style lang="scss" scoped>
+.round {
+  border-radius: 30px;
+}
+</style>
