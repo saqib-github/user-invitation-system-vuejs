@@ -9,6 +9,7 @@ const Product = mongoose.model(
       category: String,
       quantity: Number,
       description: String,
+      image: String,
       Date: Date,
     })
 );

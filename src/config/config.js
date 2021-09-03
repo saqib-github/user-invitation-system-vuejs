@@ -1,4 +1,4 @@
 export default {
-  URL_CONSTANTS: "localhost",
+  URL_CONSTANTS: "http://localhost",
   API_PORT: "3001",
 };

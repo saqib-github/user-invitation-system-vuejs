@@ -67,6 +67,7 @@ import { mdiGmail } from "@mdi/js";
 import Helpers from "../helpers/Helper.js";
 import qs from "qs";
 import jwt from "jsonwebtoken";
+import config from "../config/config.js";
 export default {
   name: "SignUpPage",
   data() {
@@ -99,7 +100,7 @@ export default {
         this.address &&
         this.password
       ) {
-        const url = "http://localhost:3001/api/auth/signup";
+        const url = `${config.URL_CONSTANTS}:${config.API_PORT}/api/auth/signup`;
         const user = qs.stringify({
           first_name: this.first_name,
           last_name: this.last_name,

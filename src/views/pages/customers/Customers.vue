@@ -85,6 +85,7 @@
 <script>
 import Helpers from "@/helpers/Helper.js";
 import DataTable from "@/components/DataTable.vue";
+import config from "@/config/config.js";
 import Swal from "sweetalert2";
 export default {
   name: "customers-component",
@@ -136,7 +137,7 @@ export default {
       }).then((result) => {
         if (result.isConfirmed) {
           // eslint-disable-next-line no-unused-vars
-          let url = `http://localhost:3001/api/customers/${_id}`;
+          let url = `${config.URL_CONSTANTS}:${config.API_PORT}/api/customers/${_id}`;
           const headers = {
             "x-access-token": `${this.$localStorage.get("token")}`,
             "content-type": "application/json",
@@ -172,7 +173,7 @@ export default {
     saveCustomer() {
       this.loader = true;
       console.log("update vali id", this.id);
-      let url = `http://localhost:3001/api/customers/${this.id}`;
+      let url = `${config.URL_CONSTANTS}:${config.API_PORT}/api/customers/${this.id}`;
       const headers = {
         "x-access-token": `${this.$localStorage.get("token")}`,
         "content-type": "application/json",
@@ -205,7 +206,7 @@ export default {
       this.loader = true;
       let fetched_customers = [];
       // eslint-disable-next-line no-unused-vars
-      let url = "http://localhost:3001/api/customers";
+      let url = `${config.URL_CONSTANTS}:${config.API_PORT}/api/customers`;
       const headers = {
         "x-access-token": `${this.$localStorage.get("token")}`,
         "content-type": "application/json",

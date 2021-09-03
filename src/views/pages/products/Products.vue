@@ -30,6 +30,7 @@
 <script>
 import Helpers from "@/helpers/Helper.js";
 import Swal from "sweetalert2";
+import config from "@/config/config.js";
 import DataTable from "../../../components/DataTable.vue";
 export default {
   name: "products-component",
@@ -47,6 +48,7 @@ export default {
           align: "start",
           value: "name",
         },
+        {text: "Image", value: "image", sortable: false},
         { text: "Price", value: "price" },
         { text: "Category", value: "category" },
         { text: "Quantity", value: "quantity" },
@@ -77,7 +79,7 @@ export default {
       }).then((result) => {
         if (result.isConfirmed) {
           // eslint-disable-next-line no-unused-vars
-          let url = `http://localhost:3001/api/products/${_id}`;
+          let url = `${config.URL_CONSTANTS}:${config.API_PORT}/api/products/${_id}`;
           const headers = {
             "x-access-token": `${this.$localStorage.get("token")}`,
             "content-type": "application/json",
@@ -104,7 +106,7 @@ export default {
     // eslint-disable-next-line no-unused-vars
     let fetched_products = [];
     // eslint-disable-next-line no-unused-vars
-    let url = "http://localhost:3001/api/products";
+    let url = `${config.URL_CONSTANTS}:${config.API_PORT}/api/products`;
     const headers = {
       "x-access-token": `${this.$localStorage.get("token")}`,
       "content-type": "application/json",

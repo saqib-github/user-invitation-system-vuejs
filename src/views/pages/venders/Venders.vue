@@ -141,7 +141,7 @@ export default {
       }).then((result) => {
         if (result.isConfirmed) {
           // eslint-disable-next-line no-unused-vars
-          let url = `http://${config.URL_CONSTANTS}:${config.API_PORT}/api/vendors/${_id}`;
+          let url = `${config.URL_CONSTANTS}:${config.API_PORT}/api/vendors/${_id}`;
           const headers = {
             "x-access-token": `${this.$localStorage.get("token")}`,
             "content-type": "application/json",
@@ -176,7 +176,7 @@ export default {
     saveVendor() {
       this.loader = true;
       console.log("update vali id", this.id);
-      let url = `http://localhost:3001/api/vendors/${this.id}`;
+      let url = `${config.URL_CONSTANTS}:${config.API_PORT}/api/vendors/${this.id}`;
       const headers = {
         "x-access-token": `${this.$localStorage.get("token")}`,
         "content-type": "application/json",
@@ -209,7 +209,7 @@ export default {
   beforeCreate() {
     let fetched_vendors = [];
     // eslint-disable-next-line no-unused-vars
-    let url = "http://localhost:3001/api/vendors";
+    let url = `${config.URL_CONSTANTS}:${config.API_PORT}/api/vendors`;
     const headers = {
       "x-access-token": `${this.$localStorage.get("token")}`,
       "content-type": "application/json",

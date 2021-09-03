@@ -35,6 +35,7 @@ exports.insertFakeProducts = (req, res) => {
         category: faker.commerce.department(),
         quantity: faker.datatype.number(),
         description: faker.commerce.productDescription(),
+        image: faker.image.imageUrl(),
         Date: faker.date.past(),
       });
       product.save();

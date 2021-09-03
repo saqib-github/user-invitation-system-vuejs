@@ -72,7 +72,7 @@
                   {{ user_initials || "MA" }}</span
                 >
               </v-avatar>
-              <p class="text-caption mt-1">Email: {{ user.email }}</p>
+              <p class="text-caption mt-4">Email: {{ user.email }}</p>
               <h4 class="mb-5">
                 Name: {{ user.first_name }} {{ user.last_name }}
               </h4>
@@ -180,6 +180,7 @@ import { mdiHelpBox } from "@mdi/js";
 import { mdiMessageAlertOutline } from "@mdi/js";
 import { mdiLogout } from "@mdi/js";
 import Helpers from "../helpers/Helper.js";
+import config from "@/config/config.js";
 // import axios from "axios"
 export default {
   name: "app-bar",
@@ -225,7 +226,7 @@ export default {
   },
   beforeCreate() {
     let fetched_user = {};
-    let url = "http://localhost:3001/api/user";
+    let url = `${config.URL_CONSTANTS}:${config.API_PORT}/api/user`;
     const headers = {
       "x-access-token": `${this.$localStorage.get("token")}`,
       "content-type": "application/json",

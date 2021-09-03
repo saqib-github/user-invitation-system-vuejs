@@ -31,12 +31,9 @@
           mdiTrashCan
         }}</v-icon>
       </template>
-      <template v-slot:[`item.edit`]="{ item }">
-        <!-- ............ -->
-        <v-icon @click="editItem(item._id)" color="green">{{
-          mdiPencil
-        }}</v-icon>
-        <!-- .............. -->
+      // eslint-disable-next-line vue/no-unused-vars
+      <template v-slot:[`item.image`]="{ item }">
+        <img v-if="item.image" height="30" width="70" :src="item.image"/>
       </template>
     </v-data-table>
   </v-card>

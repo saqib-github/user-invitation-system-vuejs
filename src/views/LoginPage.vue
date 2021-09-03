@@ -69,6 +69,8 @@
 <script>
 import Swal from "sweetalert2";
 import Helpers from "../helpers/Helper.js";
+import config from "../config/config.js";
+
 export default {
   name: "login-page",
   data() {
@@ -84,7 +86,7 @@ export default {
   methods: {
     login() {
       if (this.email && this.password) {
-        const url = "http://localhost:3001/api/auth/signin";
+        const url = `${config.URL_CONSTANTS}:${config.API_PORT}/api/auth/signin`;
 
         Helpers.post(url, { email: this.email, password: this.password })
           .then((response) => {

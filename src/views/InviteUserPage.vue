@@ -41,6 +41,7 @@ import Swal from "sweetalert2";
 import Spinner from "vue-simple-spinner";
 // import Helpers from "../helpers/Helper.js";
 import axios from "axios";
+import config from "../config/config.js";
 export default {
   name: "InviteUserPage",
   components: {
@@ -64,7 +65,7 @@ export default {
       }
       if (this.send_invite_email) {
         console.log("email", this.send_invite_email);
-        let url = "http://localhost:3001/api/user/sendmail";
+        let url = `${config.URL_CONSTANTS}:${config.API_PORT}/api/user/sendmail`;
         const headers = {
           "x-access-token": `${this.$localStorage.get("token")}`,
           "content-type": "application/json",
