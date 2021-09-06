@@ -9,6 +9,7 @@ import VueBreadcrumbs from "vue-2-breadcrumbs";
 import loader from "vue-ui-preloader";
 
 Vue.use(VueBreadcrumbs);
+// Vue.config.devtools = false;
 Vue.use(loader, {
   template: `<loader
   object="#33a7ff"

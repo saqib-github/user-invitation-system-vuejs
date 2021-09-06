@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 const express = require("express");
 const bodyParser = require("body-parser");
+const fileupload = require("express-fileupload");
 const cors = require("cors");
 const dbConfig = require("./app/config/db.config");
 const mongoose = require("mongoose");
@@ -19,6 +20,7 @@ const app = express();
 // application midlwares
 app.use(cors());
 app.use(bodyParser.json());
+app.use(fileupload());
 
 app.use(bodyParser.urlencoded({ extended: true }));
 

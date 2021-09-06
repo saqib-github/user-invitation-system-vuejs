@@ -4,6 +4,8 @@ const User = db.user;
 
 var jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
+// eslint-disable-next-line no-unused-vars
+const multer = require("multer");
 
 exports.getUser = (req, res) => {
   let token = req.headers["x-access-token"];
@@ -286,4 +288,23 @@ exports.sendMail = async (req, res) => {
   } catch (err) {
     console.log("not sent error", err);
   }
+};
+
+exports.updateUser = async (req, res) => {
+  console.log("req", req.files);
+  try {
+    const user = await User.findByIdAndUpdate(req.params.id, {
+      first_name: req.body.first_name,
+      last_name: req.body.last_name,
+      address: req.body.address,
+      email: req.body.email,
+      image: req.files.image,
+    });
+    console.log(user);
+    res
+      .status(200)
+      .json({ message: "User updated successfully"});
+  } catch (err) {
+    res.json({ message: err.message });
+  } //
 };
